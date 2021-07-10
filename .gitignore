@@ -3,3 +3,7 @@
 
 # Ignoring the output directory
 build/
+
+#################### TODO ####################
+# A detailed list of files needs to be added 
+# for ignoring in commits.
