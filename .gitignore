@@ -1,0 +1,5 @@
+# Ignoring the intermediate files
+*.o
+
+# Ignoring the output directory
+build/
