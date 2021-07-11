@@ -5,3 +5,18 @@
 # User Interface
 
 The user-interface for this project is kept in a separate repository https://github.com/easy-machines/orchestra-ui
+
+# Building the Project on Linux Machine
+
+Download the project and go to the base directory of *Orchestra*
+
+```
+git pull https://github.com/easy-machines/orchestra
+cd orchestra
+```
+
+Build the project
+
+```
+make
+```
