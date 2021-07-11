@@ -28,15 +28,15 @@ CORE_ORCHESTRATOR_DIR           = $(CORE_ROOT_DIR)/Orchestrator
 EXECUTION_MODULES_ROOT_DIR      = ExecutionModules
 EXECUTION_MODULES_LINUX_DIR     = $(EXECUTION_MODULES_ROOT_DIR)/Linux
 
-APP_SRCS_DIRS =                                     \
-                $(CORE_ROOT_DIR)/                   \
-                $(CORE_CONFIGURATION_PROVIDER_DIR)/ \
-                $(CORE_CONNECTION_MANAGER_DIR)/     \
-                $(CORE_CRYPTO_DIR)/                 \
-                $(CORE_MODULES_MANAGER_DIR)/        \
-                $(CORE_ORCHESTRATOR_DIR)/           \
-				$(EXECUTION_MODULES_ROOT_DIR)/      \
-                $(EXECUTION_MODULES_LINUX_DIR)/
+APP_SRCS_DIRS =                                    \
+                $(CORE_ROOT_DIR)                   \
+                $(CORE_CONFIGURATION_PROVIDER_DIR) \
+                $(CORE_CONNECTION_MANAGER_DIR)     \
+                $(CORE_CRYPTO_DIR)                 \
+                $(CORE_MODULES_MANAGER_DIR)        \
+                $(CORE_ORCHESTRATOR_DIR)           \
+				$(EXECUTION_MODULES_ROOT_DIR)      \
+                $(EXECUTION_MODULES_LINUX_DIR)
 
 INCLUDE_DIRS := $(foreach dir, $(APP_SRCS_DIRS), -I$(SRC_ROOT_DIR)/$(dir))
 
@@ -49,13 +49,13 @@ $(foreach dir, $(APP_SRCS_DIRS), $(shell [ -d $(BUILD_ROOT_DIR)/$(dir) ] || mkdi
 #######################################
 # Defining Object Files
 #######################################
-SRCS_C   := $(foreach dir, $(APP_SRCS_DIRS), $(shell ls $(dir)/*.c 2>/dev/null | sed "s/.*[/]/$(dir)\//"))
-SRCS_CPP := $(foreach dir, $(APP_SRCS_DIRS), $(shell ls $(dir)/*.cpp 2>/dev/null | sed "s/.*[/]/$(dir)\//"))
+SRCS_C   := $(foreach dir, $(APP_SRCS_DIRS), $(shell ls $(SRC_ROOT_DIR)/$(dir)/*.c 2>/dev/null | sed "s|.*/|$(SRC_ROOT_DIR)/$(dir)/|g"))
+SRCS_CPP := $(foreach dir, $(APP_SRCS_DIRS), $(shell ls $(SRC_ROOT_DIR)/$(dir)/*.cpp 2>/dev/null | sed "s|.*/|$(SRC_ROOT_DIR)/$(dir)/|g"))
 
-OBJS_C   := $(foreach file, $(SRCS_C:.c=.o), $(BUILD_ROOT_DIR)/$(file))
-OBJS_CPP := $(foreach file, $(SRCS_CPP:.cpp=.o), $(BUILD_ROOT_DIR)/$(file))
+OBJS_C   := $(foreach file, $(SRCS_C:c=o), $(shell echo $(file) | sed "s|$(SRC_ROOT_DIR)/|$(BUILD_ROOT_DIR)/|g"))
+OBJS_CPP := $(foreach file, $(SRCS_CPP:cpp=o), $(shell echo $(file) | sed "s|$(SRC_ROOT_DIR)/|$(BUILD_ROOT_DIR)/|g"))
 
-APP_OBJECTS  = $(OBJS_C) $(OBJS_CPP)
+APP_OBJECTS := $(OBJS_C) $(OBJS_CPP)
 
 default: application
 
@@ -64,6 +64,7 @@ default: application
 ################################################################################
 APP_C_FLAGS          = -fPIC -Wall -std=c11 $(INCLUDE_DIRS) -lpthread
 APP_CPP_FLAGS        = -Wall -std=c++11 $(INCLUDE_DIRS) -lpthread
+APP_LINKING_FLAGS    = -Wall -std=c++11 $(INCLUDE_DIRS) -lpthread
 
 #######################################
 # Rules for ".c"
@@ -147,7 +148,7 @@ $(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.o: $(SRC_ROOT_DIR)/$(EXECUTIO
 #    Building Application                                                      #
 ################################################################################
 application: $(APP_OBJECTS)
-	@$(LDGCC) -o $(BUILD_ROOT_DIR)/$(APP_EXE) $(APP_OBJECTS) $(APP_CPP_FLAGS)
+	@$(LDGCC) -o $(BUILD_ROOT_DIR)/$(APP_EXE) $(APP_OBJECTS) $(APP_LINKING_FLAGS)
 	@echo "*****************************************************************"
 	@echo "*** Build Complete"
 	@echo "*****************************************************************"
