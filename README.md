@@ -19,9 +19,15 @@ sudo apt-get install -y make gcc g++
 ### RedHat
 Gather the dependencies for building *Orchestra* on Red Hat like Linux Distributions
 
+For YUM based package management:
+
 ```
 sudo yum install -y make gcc g++
-OR
+```
+
+For DNF based package management:
+
+```
 sudo dnf install -y make gcc g++
 ```
 
