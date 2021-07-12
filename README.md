@@ -44,3 +44,10 @@ Build the project
 ```
 make
 ```
+
+## Installing
+After successfully building, *Orchestra* can be installed for placing it's executable and configuration files in respective directories.
+
+```
+make install
+```
