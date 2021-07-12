@@ -21,7 +21,7 @@ BUILD_ROOT_DIR = $(PWD)/build
 APP_EXE_DIR    = $(PWD)
 
 CORE_ROOT_DIR                         = Core
-CORE_CONFIGURATION_DIR                = $(CORE_ROOT_DIR)/Configuration
+CORE_COMMON_DIR                       = $(CORE_ROOT_DIR)/Common
 CORE_CONNECTIVITY_DIR                 = $(CORE_ROOT_DIR)/Connectivity
 CORE_CRYPTO_DIR                       = $(CORE_ROOT_DIR)/Crypto
 CORE_EXECUTION_MODULES_MANAGEMENT_DIR = $(CORE_ROOT_DIR)/ExecutionModulesManagement
@@ -31,7 +31,7 @@ EXECUTION_MODULES_LINUX_DIR           = $(EXECUTION_MODULES_ROOT_DIR)/Linux
 
 APP_SRCS_DIRS =                              \
     $(CORE_ROOT_DIR)                         \
-    $(CORE_CONFIGURATION_DIR)                \
+    $(CORE_COMMON_DIR)                       \
     $(CORE_CONNECTIVITY_DIR)                 \
     $(CORE_CRYPTO_DIR)                       \
     $(CORE_EXECUTION_MODULES_MANAGEMENT_DIR) \
@@ -78,7 +78,7 @@ $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
-$(BUILD_ROOT_DIR)/$(CORE_CONFIGURATION_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONFIGURATION_DIR)/%.c
+$(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
@@ -117,7 +117,7 @@ $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-$(BUILD_ROOT_DIR)/$(CORE_CONFIGURATION_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONFIGURATION_DIR)/%.cpp
+$(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 

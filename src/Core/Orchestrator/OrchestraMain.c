@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "./PlatformTest.h"
-#include "./Configuration/ConfigurationProvider.h"
+#include "./Common/ConfigurationProvider.h"
 #include "./Connectivity/TcpConnectionManager.h"
 #include "./Crypto/CryptoServiceProvider.h"
 #include "./ExecutionModulesManagement/ModulesExecutionManager.h"
