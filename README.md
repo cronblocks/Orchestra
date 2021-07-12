@@ -16,7 +16,7 @@ Gather the tooling / dependencies for building *Orchestra* on Debian / Ubuntu li
 sudo apt-get install -y make gcc g++
 ```
 
-### RedHat
+### Red Hat
 Gather the tooling / dependencies for building *Orchestra* on Red Hat like Linux Distributions
 
 For YUM based package management:
