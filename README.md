@@ -7,17 +7,17 @@ The user-interface for this project is kept in a separate repository https://git
 # Linux Machine
 Presently the project is targeting for controlling remote Linux machines from the ease of Graphical User Interface on Windows machines.
 
-## Getting the Dependencies
+## Setting the Build Environment
 
 ### Debian / Ubuntu
-Gather the dependencies for building *Orchestra* on Debian / Ubuntu like Linux Distributions
+Gather the tooling / dependencies for building *Orchestra* on Debian / Ubuntu like Linux Distributions
 
 ```
 sudo apt-get install -y make gcc g++
 ```
 
 ### RedHat
-Gather the dependencies for building *Orchestra* on Red Hat like Linux Distributions
+Gather the tooling / dependencies for building *Orchestra* on Red Hat like Linux Distributions
 
 For YUM based package management:
 
