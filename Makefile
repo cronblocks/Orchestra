@@ -18,25 +18,26 @@ LD     = $(LDGCC)
 APP_EXE        = orchestra
 SRC_ROOT_DIR   = $(PWD)/src
 BUILD_ROOT_DIR = $(PWD)/build
+APP_EXE_DIR    = $(PWD)
 
-CORE_ROOT_DIR                   = Core
-CORE_CONFIGURATION_PROVIDER_DIR = $(CORE_ROOT_DIR)/ConfigurationProvider
-CORE_CONNECTION_MANAGER_DIR     = $(CORE_ROOT_DIR)/ConnectionManager
-CORE_CRYPTO_DIR                 = $(CORE_ROOT_DIR)/Crypto
-CORE_MODULES_MANAGER_DIR        = $(CORE_ROOT_DIR)/ModulesManager
-CORE_ORCHESTRATOR_DIR           = $(CORE_ROOT_DIR)/Orchestrator
-EXECUTION_MODULES_ROOT_DIR      = ExecutionModules
-EXECUTION_MODULES_LINUX_DIR     = $(EXECUTION_MODULES_ROOT_DIR)/Linux
+CORE_ROOT_DIR                         = Core
+CORE_CONFIGURATION_DIR                = $(CORE_ROOT_DIR)/Configuration
+CORE_CONNECTIVITY_DIR                 = $(CORE_ROOT_DIR)/Connectivity
+CORE_CRYPTO_DIR                       = $(CORE_ROOT_DIR)/Crypto
+CORE_EXECUTION_MODULES_MANAGEMENT_DIR = $(CORE_ROOT_DIR)/ExecutionModulesManagement
+CORE_ORCHESTRATOR_DIR                 = $(CORE_ROOT_DIR)/Orchestrator
+EXECUTION_MODULES_ROOT_DIR            = ExecutionModules
+EXECUTION_MODULES_LINUX_DIR           = $(EXECUTION_MODULES_ROOT_DIR)/Linux
 
-APP_SRCS_DIRS =                                    \
-                $(CORE_ROOT_DIR)                   \
-                $(CORE_CONFIGURATION_PROVIDER_DIR) \
-                $(CORE_CONNECTION_MANAGER_DIR)     \
-                $(CORE_CRYPTO_DIR)                 \
-                $(CORE_MODULES_MANAGER_DIR)        \
-                $(CORE_ORCHESTRATOR_DIR)           \
-				$(EXECUTION_MODULES_ROOT_DIR)      \
-                $(EXECUTION_MODULES_LINUX_DIR)
+APP_SRCS_DIRS =                              \
+    $(CORE_ROOT_DIR)                         \
+    $(CORE_CONFIGURATION_DIR)                \
+    $(CORE_CONNECTIVITY_DIR)                 \
+    $(CORE_CRYPTO_DIR)                       \
+    $(CORE_EXECUTION_MODULES_MANAGEMENT_DIR) \
+    $(CORE_ORCHESTRATOR_DIR)                 \
+    $(EXECUTION_MODULES_ROOT_DIR)            \
+    $(EXECUTION_MODULES_LINUX_DIR)
 
 INCLUDE_DIRS := $(foreach dir, $(APP_SRCS_DIRS), -I$(SRC_ROOT_DIR)/$(dir))
 
@@ -77,11 +78,11 @@ $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
-$(BUILD_ROOT_DIR)/$(CORE_CONFIGURATION_PROVIDER_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONFIGURATION_PROVIDER_DIR)/%.c
+$(BUILD_ROOT_DIR)/$(CORE_CONFIGURATION_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONFIGURATION_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
-$(BUILD_ROOT_DIR)/$(CORE_CONNECTION_MANAGER_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONNECTION_MANAGER_DIR)/%.c
+$(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
@@ -89,7 +90,7 @@ $(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
-$(BUILD_ROOT_DIR)/$(CORE_MODULES_MANAGER_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_MODULES_MANAGER_DIR)/%.c
+$(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
@@ -116,11 +117,11 @@ $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-$(BUILD_ROOT_DIR)/$(CORE_CONFIGURATION_PROVIDER_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONFIGURATION_PROVIDER_DIR)/%.cpp
+$(BUILD_ROOT_DIR)/$(CORE_CONFIGURATION_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONFIGURATION_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-$(BUILD_ROOT_DIR)/$(CORE_CONNECTION_MANAGER_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONNECTION_MANAGER_DIR)/%.cpp
+$(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
@@ -128,7 +129,7 @@ $(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-$(BUILD_ROOT_DIR)/$(CORE_MODULES_MANAGER_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_MODULES_MANAGER_DIR)/%.cpp
+$(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
@@ -148,7 +149,7 @@ $(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.o: $(SRC_ROOT_DIR)/$(EXECUTIO
 #    Building Application                                                      #
 ################################################################################
 application: $(APP_OBJECTS)
-	@$(LDGCC) -o $(BUILD_ROOT_DIR)/$(APP_EXE) $(APP_OBJECTS) $(APP_LINKING_FLAGS)
+	@$(LDGCC) -o $(APP_EXE_DIR)/$(APP_EXE) $(APP_OBJECTS) $(APP_LINKING_FLAGS)
 	@echo "*****************************************************************"
 	@echo "*** Build Complete"
 	@echo "*****************************************************************"
@@ -159,7 +160,7 @@ application: $(APP_OBJECTS)
 ################################################################################
 clean:
 	$(foreach dir, $(APP_SRCS_DIRS), $(shell rm -f $(BUILD_ROOT_DIR)/$(dir)/*.o))
-	@rm -f $(BUILD_ROOT_DIR)/$(APP_EXE)
+	@rm -f $(APP_EXE_DIR)/$(APP_EXE)
 	@echo "Project cleaned ..."
 
 ################################################################################

@@ -1,7 +1,8 @@
-# Ignoring the intermediate files
+# Ignoring the build files
 *.o
+orchestra
 
-# Ignoring the output directory
+# Ignoring the build directory
 build/
 
 # Ignoring the Tooling directories
