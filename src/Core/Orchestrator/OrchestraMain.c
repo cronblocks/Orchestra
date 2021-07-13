@@ -11,13 +11,14 @@ void parse_command_line_arguments(int argc, char** argv);
 void setup_execution_environment();
 void execute();
 
-int main(int argc, char** argv)
+int main(int argc, char** argv, char** env)
 {
     if (argc > 1)
     {
         parse_command_line_arguments(argc, argv);
     }
-
+    
+    load_configuration(env);
     setup_execution_environment();
 
     execute();
@@ -73,7 +74,7 @@ void parse_command_line_arguments(int argc, char** argv)
 
 void setup_execution_environment()
 {
-    load_configuration();
+    //
 }
 
 void execute()
