@@ -34,6 +34,7 @@ EXECUTION_MODULES_ROOT_DIR            = ExecutionModules
 EXECUTION_MODULES_LINUX_DIR           = $(EXECUTION_MODULES_ROOT_DIR)/Linux
 
 APP_SRCS_DIRS =                              \
+    .                                        \
     $(CORE_ROOT_DIR)                         \
     $(CORE_COMMON_DIR)                       \
     $(CORE_CONNECTIVITY_DIR)                 \
