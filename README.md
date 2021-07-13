@@ -51,3 +51,10 @@ After successfully building, *Orchestra* can be installed for placing it's execu
 ```
 make install
 ```
+
+## Uninstalling
+All the files and created folders are removed to undo the installation process.
+
+```
+make uninstall
+```

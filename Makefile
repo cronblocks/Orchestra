@@ -167,9 +167,14 @@ clean:
 #    Installing Application                                                    #
 ################################################################################
 install: application
-	@echo "Installing Orchestra"
-	@echo "Copying Executable"
+	@echo "[Installing Orchestra]"
+	@echo "Installing Executable"
 	@echo "Copying Configuration Files"
+
+uninstall:
+	@echo "[Uninstalling Orchestra]"
+	@echo "Removing Executable"
+	@echo "Removing Configuration Files"
 
 ################################################################################
 #                            ----------------------                            #
