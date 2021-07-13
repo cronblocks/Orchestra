@@ -1,33 +1,66 @@
-#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
-#include "./Helpers.h"
-#include "./Common/ConfigurationProvider.h"
-#include "./Connectivity/TcpConnectionManager.h"
-#include "./Crypto/CryptoServiceProvider.h"
-#include "./ExecutionModulesManagement/ModulesExecutionManager.h"
+#include "Helpers.h"
+#include "ConfigurationProvider.h"
+#include "TcpConnectionManager.h"
+#include "CryptoServiceProvider.h"
+#include "ModulesExecutionManager.h"
+
+void parse_command_line_arguments(int argc, char** argv);
 
 int main(int argc, char** argv)
 {
     if (argc > 1)
     {
-        for (int i=0; i<argc; i++)
+        parse_command_line_arguments(argc, argv);
+    }
+}
+
+void parse_command_line_arguments(int argc, char** argv)
+{
+    int isPrintAbout = 0;
+    int isPrintHelp = 0;
+
+    char* configFilePath;
+    int isSetConfig = 0;
+
+    for (int i=0; i<argc; i++)
+    {
+        char* argument = argv[i];
+
+        if (strcmp(argument, "--about") == 0)
         {
-            char* argument = argv[i];
+            isPrintAbout = 1;
+        }
 
-            if (strcmp(argument, "--help") == 0)
-            {
-                print_help();
-                return 0;
-            }
+        if (strcmp(argument, "--help") == 0)
+        {
+            isPrintHelp = 1;
+        }
 
-            if (strcmp(argument, "--about") == 0)
+        if (strcmp(argument, "--config") == 0)
+        {
+            if (i < argc-1)
             {
-                print_about();
-                return 0;
+                configFilePath = argv[++i];
+                isSetConfig = 1;
             }
         }
     }
 
-    printf("\n");
+    if (isPrintAbout)
+    {
+        print_about();
+        exit(0);
+    }
+    else if (isPrintHelp)
+    {
+        print_help();
+        exit(0);
+    }
+    else if(isSetConfig)
+    {
+        set_config_path(configFilePath);
+    }
 }
