@@ -15,10 +15,14 @@ LD     = $(LDGCC)
 #######################################
 # Defining Paths
 #######################################
-APP_EXE        = orchestra
-SRC_ROOT_DIR   = $(PWD)/src
-BUILD_ROOT_DIR = $(PWD)/build
-APP_EXE_DIR    = $(PWD)
+APP_EXE          = orchestra
+SRC_ROOT_DIR     = $(PWD)/src
+BUILD_ROOT_DIR   = $(PWD)/build
+APP_EXE_DIR      = $(PWD)
+CONFIG_FILES_DIR = $(SRC_ROOT_DIR)/Core/Common/ConfigurationFiles
+
+TARGET_EXE_DIR  = /usr/bin/
+TARGET_CONF_DIR = /etc/$(APP_EXE)
 
 CORE_ROOT_DIR                         = Core
 CORE_COMMON_DIR                       = $(CORE_ROOT_DIR)/Common
@@ -166,15 +170,35 @@ clean:
 ################################################################################
 #    Installing Application                                                    #
 ################################################################################
-install: application
+install:
 	@echo "[Installing Orchestra]"
-	@echo "Installing Executable"
-	@echo "Copying Configuration Files"
+	@echo ""
+
+	@echo "Installing Executables ..."
+	@if [ -f $(APP_EXE_DIR)/$(APP_EXE) ];                       \
+	then                                                        \
+		sudo cp -f $(APP_EXE_DIR)/$(APP_EXE) $(TARGET_EXE_DIR); \
+	else                                                        \
+		echo "Please build the project first";                  \
+	fi
+
+	@echo "Copying Configuration Files ..."
+	$(shell [ -d $(TARGET_CONF_DIR) ] || sudo mkdir $(TARGET_CONF_DIR))
+	@sudo cp -f $(CONFIG_FILES_DIR)/*.conf $(TARGET_CONF_DIR)
+
+	@echo "Completed"
 
 uninstall:
 	@echo "[Uninstalling Orchestra]"
-	@echo "Removing Executable"
-	@echo "Removing Configuration Files"
+	@echo ""
+
+	@echo "Removing Executables ..."
+	@sudo rm -f $(TARGET_EXE_DIR)/$(APP_EXE);
+
+	@echo "Removing Configuration Files ..."
+	@sudo rm -rf $(TARGET_CONF_DIR)
+
+	@echo "Completed"
 
 ################################################################################
 #                            ----------------------                            #
