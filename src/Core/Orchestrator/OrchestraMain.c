@@ -8,6 +8,8 @@
 #include "ModulesExecutionManager.h"
 
 void parse_command_line_arguments(int argc, char** argv);
+void setup_execution_environment();
+void execute();
 
 int main(int argc, char** argv)
 {
@@ -15,6 +17,10 @@ int main(int argc, char** argv)
     {
         parse_command_line_arguments(argc, argv);
     }
+
+    setup_execution_environment();
+
+    execute();
 }
 
 void parse_command_line_arguments(int argc, char** argv)
@@ -63,4 +69,14 @@ void parse_command_line_arguments(int argc, char** argv)
     {
         set_config_path(configFilePath);
     }
+}
+
+void setup_execution_environment()
+{
+    load_configuration();
+}
+
+void execute()
+{
+    //
 }
