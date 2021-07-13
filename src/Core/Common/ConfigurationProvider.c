@@ -125,7 +125,8 @@ static void load_environment_variables(char** environment_variables)
         int i = 0;
         while (environment_variables[i] != NULL)
         {
-            // orc_console_print_line(environment_variables[i++]);
+            //orc_console_print_line(environment_variables[i]);
+            i++;
         }
     }
 }

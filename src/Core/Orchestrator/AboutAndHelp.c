@@ -1,10 +1,13 @@
+#include "AppInfo.h"
 #include "Helpers.h"
 #include "OrcPrint.h"
 
 static void print_banner()
 {
-    orc_console_print_line("Orchestra");
-    orc_console_print_line("=========");
+    orc_console_print(APP_NAME);
+    orc_console_print(" v");
+    orc_console_print_line(APP_VERSION);
+    orc_console_print_line("===================");
     orc_console_print_line("");
 }
 
