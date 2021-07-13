@@ -2,4 +2,4 @@
 
 void set_config_path(char* config_path);
 
-void load_configuration();
+void load_configuration(char** environment_variables);
