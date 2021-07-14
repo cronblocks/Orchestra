@@ -1,22 +1,57 @@
 #include <dirent.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 
 #include "OrcPrint.h"
 #include "ConfigurationProvider.h"
 
-#define RTRIM(x) {size_t __inr_=0;while(x[__inr_]!=' ' && x[__inr_]!='\0')__inr_++;x[__inr_]='\0';}
+#define RTRIM(x) {size_t __inr_=strlen(x)-1;while(__inr_>0&&x[__inr_]==' ')__inr_--;x[__inr_+1]='\0';}
 #define LTRIM(x) {size_t __nsl_=0,__inl_=0;while(x[__nsl_]==' ')__nsl_++;while(x[__nsl_]!='\0'){x[__inl_]=x[__nsl_];__inl_++;__nsl_++;}x[__inl_]='\0';}
-#define TRIM(x) LTRIM(x) RTRIM(x)
+#define TRIM_CHARS(x) {size_t __tgt_=0,__src_=0;while(__src_<=strlen(x)){x[__tgt_]=x[__src_];__src_++;if(x[__tgt_]!='"'&&x[__tgt_]!='\''&&x[__tgt_]!='\n')__tgt_++;}}
+#define TRIM(x) RTRIM(x) LTRIM(x) TRIM_CHARS(x)
 
 //------------------------------------------------------------------------------
 // Configuration Variables
 //------------------------------------------------------------------------------
 static char* default_config_files_path = "/etc/orchestra/";
 
+static char data_directory[300];
+static char temp_data_directory[300];
+static char log_directory[300];
+static char scripts_directory[300];
+static char user_data_directory[300];
+static char app_data_directory[300];
+
+static char log_file[300];
+static char user_data_file[300];
+static char app_data_file[300];
+
+static char listening_address[100];
+static unsigned short listening_port = 15209;
+
+static char initial_user_name[50];
+static char initial_user_password[50];
+
 //------------------------------------------------------------------------------
 // Configuration Accessors
 //------------------------------------------------------------------------------
+const char* config_get_data_directory()          { return data_directory;        }
+const char* config_get_temp_data_directory()     { return temp_data_directory;   }
+const char* config_get_log_directory()           { return log_directory;         }
+const char* config_get_scripts_directory()       { return scripts_directory;     }
+const char* config_get_user_data_directory()     { return user_data_directory;   }
+const char* config_get_app_data_directory()      { return app_data_directory;    }
+
+const char* config_get_log_file()                { return log_file;              }
+const char* config_get_user_data_file()          { return user_data_file;        }
+const char* config_get_app_data_file()           { return app_data_file;         }
+
+const char* config_get_listening_address()       { return listening_address;     }
+const unsigned short config_get_listening_port() { return listening_port;        }
+
+const char* config_get_initial_user_name()       { return initial_user_name;     }
+const char* config_get_initial_user_password()   { return initial_user_password; }
 
 //------------------------------------------------------------------------------
 // Loading the Configuration from File(s) & Environment Variables
@@ -91,11 +126,8 @@ void load_configuration(const char* config_files_path, const char** environment_
             if (S_ISREG(direntry_stat.st_mode) &&       // it is a regular file
                 name_ends_with(full_filename, ".conf")) // name ends with .conf
             {
-                orc_console_print("Reading: ");
-                orc_console_print_line(full_filename);
-                
-                // Reading Configuration Files
-                load_configuration_file("");
+                // Reading Configuration File
+                load_configuration_file(full_filename);
             }
         }
 
@@ -129,80 +161,89 @@ static int name_ends_with(const char* file_name, const char* ends)
     return 1;
 }
 
-static void load_configuration_file(const char* fileName)
+static void load_configuration_file(const char* file_name)
 {
-    /*
-    ifstream iFile(CONFIGURATION_FILENAME);
+    orc_console_print("Reading: ");
+    orc_console_print_line(file_name);
+    
+    FILE* i_file = fopen(file_name, "r");
 
-    if (iFile.is_open())
+    if (i_file != NULL)
     {
-        char line[500];
-        bool isEqualSignPresent;
-        string sectionName = "STRINGS";
-        char *namePtr;
-        char *valuePtr;
+        char line[1000];
+        int is_equal_sign_present;
+        char section_name[50];
+        char *name_ptr;
+        char *value_ptr;
 
-        while (!iFile.eof())
+        strncpy(section_name, "", sizeof(section_name));
+
+        while (fgets(line, sizeof(line), i_file) != NULL)
         {
-            iFile.getline(line, sizeof (line));
+            TRIM(line);
 
+            if(line[0] != '#' &&  // Leaving the comments
+               strlen(line) >= 2) // Should atleast be like "a=" a blank value
+            {
+                orc_console_print_line(line);
+            }
+            /*
             string _v = string(line);
 
             if (string(line) == "[UINTS]")
             {
-                sectionName = "UINTS";
+                section_name = "UINTS";
                 continue;
             }
             else if (string(line) == "[USHORTS]")
             {
-                sectionName = "USHORTS";
+                section_name = "USHORTS";
                 continue;
             }
             else if (string(line) == "[STRINGS]")
             {
-                sectionName = "STRINGS";
+                section_name = "STRINGS";
                 continue;
             }
 
-            isEqualSignPresent = false;
+            is_equal_sign_present = false;
             for (size_t i = 0; i < sizeof (line); i++)
             {
                 if (line[i] == 0) break;
                 if ((line[i] == '=') && (i + 1 < sizeof (line) - 1))
                 {
                     line[i] = '\0';
-                    isEqualSignPresent = true;
-                    namePtr = &line[0];
-                    valuePtr = &line[i + 1];
+                    is_equal_sign_present = true;
+                    name_ptr = &line[0];
+                    value_ptr = &line[i + 1];
                     break;
                 }
             }
 
-            if (isEqualSignPresent)
+            if (is_equal_sign_present)
             {
-                TRIM(namePtr);
-                TRIM(valuePtr);
+                TRIM(name_ptr);
+                TRIM(value_ptr);
 
                 string name = string(namePtr);
 
-                if (sectionName == "UINTS")
+                if (section_name == "UINTS")
                 {
                     uintValues[name] = (uint) atoi(valuePtr);
                 }
-                else if (sectionName == "USHORTS")
+                else if (section_name == "USHORTS")
                 {
                     ushortValues[name] = (ushort) atoi(valuePtr);
                 }
-                else if (sectionName == "STRINGS")
+                else if (section_name == "STRINGS")
                 {
-                    stringValues[name] = string(valuePtr);
+                    stringValues[name] = string(value_ptr);
                 }
-            }
+            }*/
         }
 
-        iFile.close();
+        fclose(i_file);
     }
-    */
 }
 
 static void load_environment_variables(const char** environment_variables)
