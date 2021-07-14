@@ -7,9 +7,9 @@
 #include "CryptoServiceProvider.h"
 #include "ModulesExecutionManager.h"
 
-void parse_command_line_arguments(int argc, char** argv);
-void setup_execution_environment();
-void execute();
+static void parse_command_line_arguments(int argc, char** argv);
+static void setup_execution_environment();
+static void execute();
 
 int main(int argc, char** argv, char** env)
 {
@@ -19,8 +19,8 @@ int main(int argc, char** argv, char** env)
     }
     
     load_configuration(env);
-    setup_execution_environment();
 
+    setup_execution_environment();
     execute();
 }
 
