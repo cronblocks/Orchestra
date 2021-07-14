@@ -161,6 +161,8 @@ static int name_ends_with(const char* file_name, const char* ends)
     return 1;
 }
 
+static void parse_line(char* line, int is_ignore_case);
+
 static void load_configuration_file(const char* file_name)
 {
     orc_console_print("Reading: ");
@@ -257,4 +259,9 @@ static void load_environment_variables(const char** environment_variables)
             i++;
         }
     }
+}
+
+static void parse_line(char* line, int is_ignore_case)
+{
+    
 }
