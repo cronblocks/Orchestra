@@ -2,7 +2,7 @@
 
 void load_configuration(const char* config_files_path, const char** environment_variables);
 
-// Value Getters
+// Special Value Getters
 const char* config_get_data_directory();
 const char* config_get_temp_data_directory();
 const char* config_get_log_directory();
@@ -19,3 +19,6 @@ const unsigned short config_get_listening_port();
 
 const char* config_get_initial_user_name();
 const char* config_get_initial_user_password();
+
+// Generic Value Getter
+const char* config_get_value(const char* section, const char* key);
