@@ -1,5 +1,3 @@
 #pragma once
 
-void set_config_path(char* config_path);
-
-void load_configuration(char** environment_variables);
+void load_configuration(const char* config_files_path, const char** environment_variables);

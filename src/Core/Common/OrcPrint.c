@@ -5,7 +5,7 @@
 //------------------------------------------------------
 // Log
 //------------------------------------------------------
-void orc_log_print(char* message)
+void orc_log_print(const char* message)
 {
     //
 }
@@ -25,7 +25,7 @@ void orc_log_print_double(double value)
     //
 }
 
-void orc_log_print_line(char* message)
+void orc_log_print_line(const char* message)
 {
     //
 }
@@ -33,7 +33,7 @@ void orc_log_print_line(char* message)
 //------------------------------------------------------
 // Console
 //------------------------------------------------------
-void orc_console_print(char* message)
+void orc_console_print(const char* message)
 {
     printf("%s", message);
 }
@@ -53,7 +53,7 @@ void orc_console_print_double(double value)
     printf("%f", value);
 }
 
-void orc_console_print_line(char* message)
+void orc_console_print_line(const char* message)
 {
     printf("%s\n", message);
 }
@@ -61,7 +61,7 @@ void orc_console_print_line(char* message)
 //------------------------------------------------------
 // Control Link
 //------------------------------------------------------
-void orc_control_link_print(char* message)
+void orc_control_link_print(const char* message)
 {
     //
 }
@@ -81,7 +81,7 @@ void orc_control_link_print_double(double value)
     //
 }
 
-void orc_control_link_print_line(char* message)
+void orc_control_link_print_line(const char* message)
 {
     //
 }

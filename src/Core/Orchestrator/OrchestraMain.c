@@ -11,6 +11,8 @@ static void parse_command_line_arguments(int argc, char** argv);
 static void setup_execution_environment();
 static void execute();
 
+static char* config_path = NULL;
+
 int main(int argc, char** argv, char** env)
 {
     if (argc > 1)
@@ -18,7 +20,7 @@ int main(int argc, char** argv, char** env)
         parse_command_line_arguments(argc, argv);
     }
     
-    load_configuration(env);
+    load_configuration(config_path, env);
 
     setup_execution_environment();
     execute();
@@ -29,7 +31,6 @@ void parse_command_line_arguments(int argc, char** argv)
     int isPrintAbout = 0;
     int isPrintHelp = 0;
 
-    char* configFilePath;
     int isSetConfig = 0;
 
     for (int i=0; i<argc; i++)
@@ -52,7 +53,7 @@ void parse_command_line_arguments(int argc, char** argv)
         {
             if (i < argc-1)
             {
-                configFilePath = argv[++i];
+                config_path = argv[++i];
                 isSetConfig = 1;
             }
         }
@@ -71,10 +72,7 @@ void parse_command_line_arguments(int argc, char** argv)
     }
     
     // Processing the command-line switches
-    if(isSetConfig)
-    {
-        set_config_path(configFilePath);
-    }
+    //
 }
 
 void setup_execution_environment()
