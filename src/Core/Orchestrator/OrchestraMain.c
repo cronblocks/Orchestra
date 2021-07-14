@@ -39,11 +39,13 @@ void parse_command_line_arguments(int argc, char** argv)
         if (strcmp(argument, "--about") == 0)
         {
             isPrintAbout = 1;
+            break;
         }
 
         if (strcmp(argument, "--help") == 0)
         {
             isPrintHelp = 1;
+            break;
         }
 
         if (strcmp(argument, "--config") == 0)
@@ -56,6 +58,7 @@ void parse_command_line_arguments(int argc, char** argv)
         }
     }
 
+    // Exitting on doing the needful
     if (isPrintAbout)
     {
         print_about();
@@ -66,7 +69,9 @@ void parse_command_line_arguments(int argc, char** argv)
         print_help();
         exit(0);
     }
-    else if(isSetConfig)
+    
+    // Processing the command-line switches
+    if(isSetConfig)
     {
         set_config_path(configFilePath);
     }
