@@ -136,6 +136,7 @@ static int name_ends_with(const char* file_name, const char* ends);
 static void load_configuration_file(const char* file_name);
 static void load_environment_variables(const char** environment_variables);
 static void expand_encoded_configuration_values();
+static void print_loaded_values();
 
 void load_configuration(const char* config_files_path, const char** environment_variables)
 {
@@ -216,38 +217,9 @@ void load_configuration(const char* config_files_path, const char** environment_
 
     // Expanding the encoded values
     expand_encoded_configuration_values();
-    //////////////////////
-    orc_console_print("DataDir: ");
-    orc_console_print_line(data_directory);
-    orc_console_print("TempDataDir: ");
-    orc_console_print_line(temp_data_directory);
-    orc_console_print("LogDataDir: ");
-    orc_console_print_line(log_directory);
-    orc_console_print("ScriptsDir: ");
-    orc_console_print_line(scripts_directory);
-    orc_console_print("UserDataDir: ");
-    orc_console_print_line(user_data_directory);
-    orc_console_print("AppDataDir: ");
-    orc_console_print_line(app_data_directory);
-
-    orc_console_print("LogFile: ");
-    orc_console_print_line(log_file);
-    orc_console_print("UserDataFile: ");
-    orc_console_print_line(user_data_file);
-    orc_console_print("AppDataFile: ");
-    orc_console_print_line(app_data_file);
-
-    orc_console_print("ListeningIP: ");
-    orc_console_print_line(listening_address);
-    orc_console_print("ListeningPort: ");
-    orc_console_print_int(listening_port);
-    orc_console_print_line("");
-
-    orc_console_print("InitUser: ");
-    orc_console_print_line(initial_user_name);
-    orc_console_print("InitPwd: ");
-    orc_console_print_line(initial_user_password);
-    ////////////////////
+    
+    // Debug
+    print_loaded_values();
 }
 
 static int name_ends_with(const char* file_name, const char* ends)
@@ -273,7 +245,7 @@ static int name_ends_with(const char* file_name, const char* ends)
     return 1;
 }
 
-static void process_configuration_values(const char* section, const char* key, const char* value, const int line_number);
+static void process_configuration_values(const char* section, const char* key, const char* value, const int line_number, const int is_environment_variable);
 
 static void load_configuration_file(const char* file_name)
 {
@@ -343,7 +315,7 @@ static void load_configuration_file(const char* file_name)
                     TRIM(name_ptr);
                     TRIM(value_ptr);
                     
-                    process_configuration_values(section_name, name_ptr, value_ptr, line_number);
+                    process_configuration_values(section_name, name_ptr, value_ptr, line_number, 0);
                 }
                 else
                 {
@@ -367,7 +339,9 @@ static void load_configuration_file(const char* file_name)
     }
 }
 
-static void process_configuration_values(const char* section, const char* key, const char* value, const int line_number)
+static void process_configuration_values(
+    const char* section, const char* key, const char* value,
+    const int line_number, const int is_environment_variable)
 {
     if (strcmp(section, "STANDARD_DIRECTORIES") == 0)
     {
@@ -402,8 +376,17 @@ static void process_configuration_values(const char* section, const char* key, c
             orc_console_print(" = ");
             orc_console_print(value);
             orc_console_print(" in section STANDARD_DIRECTORIES ");
-            orc_console_print(" at line# ");
-            orc_console_print_int(line_number);
+
+            if (is_environment_variable == 0)
+            {
+                orc_console_print(" at line# ");
+                orc_console_print_int(line_number);
+            }
+            else
+            {
+                orc_console_print(" of Environment Variables");
+            }
+            
             orc_console_print_line("");
         }
     }
@@ -428,8 +411,17 @@ static void process_configuration_values(const char* section, const char* key, c
             orc_console_print(" = ");
             orc_console_print(value);
             orc_console_print(" in section STANDARD_FILES ");
-            orc_console_print(" at line# ");
-            orc_console_print_int(line_number);
+
+            if (is_environment_variable == 0)
+            {
+                orc_console_print(" at line# ");
+                orc_console_print_int(line_number);
+            }
+            else
+            {
+                orc_console_print(" of Environment Variables");
+            }
+
             orc_console_print_line("");
         }
     }
@@ -450,8 +442,17 @@ static void process_configuration_values(const char* section, const char* key, c
             orc_console_print(" = ");
             orc_console_print(value);
             orc_console_print(" in section NETWORK ");
-            orc_console_print(" at line# ");
-            orc_console_print_int(line_number);
+            
+            if (is_environment_variable == 0)
+            {
+                orc_console_print(" at line# ");
+                orc_console_print_int(line_number);
+            }
+            else
+            {
+                orc_console_print(" of Environment Variables");
+            }
+
             orc_console_print_line("");
         }
     }
@@ -472,8 +473,17 @@ static void process_configuration_values(const char* section, const char* key, c
             orc_console_print(" = ");
             orc_console_print(value);
             orc_console_print(" in section INITIAL_USER ");
-            orc_console_print(" at line# ");
-            orc_console_print_int(line_number);
+            
+            if (is_environment_variable == 0)
+            {
+                orc_console_print(" at line# ");
+                orc_console_print_int(line_number);
+            }
+            else
+            {
+                orc_console_print(" of Environment Variables");
+            }
+
             orc_console_print_line("");
         }
     }
@@ -487,11 +497,56 @@ static void load_environment_variables(const char** environment_variables)
 {
     if (environment_variables != NULL)
     {
-        int i = 0;
-        while (environment_variables[i] != NULL)
+        int env_iter = 0;
+        char line[1000];
+
+        int is_equal_sign_present = 0;
+        int is_section_name_present = 0;
+        char *section_name, *key, *value;
+
+        while (environment_variables[env_iter] != NULL)
         {
-            //orc_console_print_line(environment_variables[i]);
-            i++;
+            strncpy(line, environment_variables[env_iter], sizeof(line) - 1);
+            TRIM(line);
+
+            is_equal_sign_present = 0;
+            is_section_name_present = 0;
+
+            section_name = &line[0];
+
+            for (int i = 0; i < strlen(line); i++)
+            {
+                if (i >= 2 &&
+                    is_section_name_present == 0 &&
+                    line[i] == '_' && line[i-1] == '_' &&
+                    (i + 1) < strlen(line))
+                {
+                    is_section_name_present = 1;
+                    key = &line[i+1];
+                    continue;
+                }
+
+                if (is_section_name_present &&
+                    is_equal_sign_present == 0 &&
+                    line[i] == '=' && (i+1) <= strlen(line))
+                {
+                    line[i] = '\0';
+                    is_equal_sign_present = 1;
+                    value = &line[i+1];
+                    break;
+                }
+            }
+
+            if (is_equal_sign_present && is_section_name_present)
+            {
+                TRIM(section_name);
+                TRIM(key);
+                TRIM(value);
+
+                process_configuration_values(section_name, key, value, 0, 1);
+            }
+            
+            env_iter++;
         }
     }
 }
@@ -499,4 +554,38 @@ static void load_environment_variables(const char** environment_variables)
 static void expand_encoded_configuration_values()
 {
     // TODO: to expand values like "LogFile = $(LogDirectory)/log-file.log"
+}
+
+static void print_loaded_values()
+{
+    orc_console_print("DataDir: ");
+    orc_console_print_line(data_directory);
+    orc_console_print("TempDataDir: ");
+    orc_console_print_line(temp_data_directory);
+    orc_console_print("LogDataDir: ");
+    orc_console_print_line(log_directory);
+    orc_console_print("ScriptsDir: ");
+    orc_console_print_line(scripts_directory);
+    orc_console_print("UserDataDir: ");
+    orc_console_print_line(user_data_directory);
+    orc_console_print("AppDataDir: ");
+    orc_console_print_line(app_data_directory);
+
+    orc_console_print("LogFile: ");
+    orc_console_print_line(log_file);
+    orc_console_print("UserDataFile: ");
+    orc_console_print_line(user_data_file);
+    orc_console_print("AppDataFile: ");
+    orc_console_print_line(app_data_file);
+
+    orc_console_print("ListeningIP: ");
+    orc_console_print_line(listening_address);
+    orc_console_print("ListeningPort: ");
+    orc_console_print_int(listening_port);
+    orc_console_print_line("");
+
+    orc_console_print("InitUser: ");
+    orc_console_print_line(initial_user_name);
+    orc_console_print("InitPwd: ");
+    orc_console_print_line(initial_user_password);
 }
