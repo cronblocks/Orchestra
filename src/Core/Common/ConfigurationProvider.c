@@ -345,6 +345,16 @@ static void load_configuration_file(const char* file_name)
                     
                     process_configuration_values(section_name, name_ptr, value_ptr, line_number);
                 }
+                else
+                {
+                    orc_console_print("Ignoring wrongly formatted configuration value ");
+                    orc_console_print(line);
+                    orc_console_print(" in section ");
+                    orc_console_print(section_name);
+                    orc_console_print(" at line# ");
+                    orc_console_print_int(line_number);
+                    orc_console_print_line("");
+                }
             }
         }
 
@@ -359,7 +369,7 @@ static void load_configuration_file(const char* file_name)
 
 static void process_configuration_values(const char* section, const char* key, const char* value, const int line_number)
 {
-    if (strcmp(section, "DIRECTORIES") == 0)
+    if (strcmp(section, "STANDARD_DIRECTORIES") == 0)
     {
         if (strcmp(key, "DataDirectory") == 0)
         {
@@ -391,13 +401,13 @@ static void process_configuration_values(const char* section, const char* key, c
             orc_console_print(key);
             orc_console_print(" = ");
             orc_console_print(value);
-            orc_console_print(" in section DIRECTORIES ");
+            orc_console_print(" in section STANDARD_DIRECTORIES ");
             orc_console_print(" at line# ");
             orc_console_print_int(line_number);
             orc_console_print_line("");
         }
     }
-    else if (strcmp(section, "FILES") == 0)
+    else if (strcmp(section, "STANDARD_FILES") == 0)
     {
         if (strcmp(key, "LogFile") == 0)
         {
@@ -417,7 +427,7 @@ static void process_configuration_values(const char* section, const char* key, c
             orc_console_print(key);
             orc_console_print(" = ");
             orc_console_print(value);
-            orc_console_print(" in section FILES ");
+            orc_console_print(" in section STANDARD_FILES ");
             orc_console_print(" at line# ");
             orc_console_print_int(line_number);
             orc_console_print_line("");
