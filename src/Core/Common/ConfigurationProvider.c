@@ -495,6 +495,7 @@ static void process_configuration_values(
 
 static void load_environment_variables(const char** environment_variables)
 {
+    // Required Format: Section Name__Key=Value
     if (environment_variables != NULL)
     {
         int env_iter = 0;
@@ -503,6 +504,7 @@ static void load_environment_variables(const char** environment_variables)
         int is_equal_sign_present = 0;
         int is_section_name_present = 0;
         char *section_name, *key, *value;
+        int section_end_index = 0;
 
         while (environment_variables[env_iter] != NULL)
         {
@@ -523,6 +525,7 @@ static void load_environment_variables(const char** environment_variables)
                 {
                     is_section_name_present = 1;
                     key = &line[i+1];
+                    section_end_index = i - 1;
                     continue;
                 }
 
@@ -530,6 +533,7 @@ static void load_environment_variables(const char** environment_variables)
                     is_equal_sign_present == 0 &&
                     line[i] == '=' && (i+1) <= strlen(line))
                 {
+                    line[section_end_index] = '\0';
                     line[i] = '\0';
                     is_equal_sign_present = 1;
                     value = &line[i+1];
