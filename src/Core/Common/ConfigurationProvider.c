@@ -4,13 +4,10 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "OrcPrint.h"
 #include "ConfigurationProvider.h"
-
-#define RTRIM(x) {size_t __inr_=strlen(x)-1;while(__inr_>0&&x[__inr_]==' ')__inr_--;x[__inr_+1]='\0';}
-#define LTRIM(x) {size_t __nsl_=0,__inl_=0;while(x[__nsl_]==' ')__nsl_++;while(x[__nsl_]!='\0'){x[__inl_]=x[__nsl_];__inl_++;__nsl_++;}x[__inl_]='\0';}
-#define TRIM_CHARS(x) {size_t __tgt_=0,__src_=0;while(__src_<=strlen(x)){x[__tgt_]=x[__src_];__src_++;if(x[__tgt_]!='"'&&x[__tgt_]!='\''&&x[__tgt_]!='\n')__tgt_++;}}
-#define TRIM(x) RTRIM(x) LTRIM(x) TRIM_CHARS(x)
+#include "OrcPrint.h"
+#include "Macros.h"
+#include "StringHelper.h"
 
 #define MAX_DIRECTORY_NAME_LENGTH                      300
 #define MAX_FILE_NAME_LENGTH                           300
@@ -132,7 +129,6 @@ static void config_set_value(const char* section, const char* key, const char* v
 //------------------------------------------------------------------------------
 // Loading the Configuration from File(s) & Environment Variables
 //------------------------------------------------------------------------------
-static int name_ends_with(const char* file_name, const char* ends);
 static void load_configuration_file(const char* file_name);
 static void load_environment_variables(const char** environment_variables);
 static void expand_encoded_configuration_values();
@@ -202,7 +198,7 @@ void load_configuration(const char* config_files_path, const char** environment_
             // Getting information about current entry
             stat(full_filename, &direntry_stat);
             if (S_ISREG(direntry_stat.st_mode) &&       // it is a regular file
-                name_ends_with(full_filename, ".conf")) // name ends with .conf
+                string_ends_with(full_filename, ".conf")) // name ends with .conf
             {
                 // Reading Configuration File
                 load_configuration_file(full_filename);
@@ -220,29 +216,6 @@ void load_configuration(const char* config_files_path, const char** environment_
     
     // Debug
     print_loaded_values();
-}
-
-static int name_ends_with(const char* file_name, const char* ends)
-{
-    if (strlen(file_name) < strlen(ends)) return 0;
-
-    int index_file = strlen(file_name) - 1;
-    int index_ends = strlen(ends) - 1;
-
-    while (index_ends >= 0)
-    {
-        if (file_name[index_file] == ends[index_ends])
-        {
-            index_file--;
-            index_ends--;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    return 1;
 }
 
 static void process_configuration_values(const char* section, const char* key, const char* value, const int line_number, const int is_environment_variable);
@@ -336,6 +309,68 @@ static void load_configuration_file(const char* file_name)
     {
         orc_console_print("Error! Cannot read file: ");
         orc_console_print_line(file_name);
+    }
+}
+
+static void load_environment_variables(const char** environment_variables)
+{
+    // Required Format: Section Name__Key=Value
+    if (environment_variables != NULL)
+    {
+        int env_iter = 0;
+        char line[1000];
+
+        int is_equal_sign_present = 0;
+        int is_section_name_present = 0;
+        char *section_name, *key, *value;
+        int section_end_index = 0;
+
+        while (environment_variables[env_iter] != NULL)
+        {
+            strncpy(line, environment_variables[env_iter], sizeof(line) - 1);
+            TRIM(line);
+
+            is_equal_sign_present = 0;
+            is_section_name_present = 0;
+
+            section_name = &line[0];
+
+            for (int i = 0; i < strlen(line); i++)
+            {
+                if (i >= 2 &&
+                    is_section_name_present == 0 &&
+                    line[i] == '_' && line[i-1] == '_' &&
+                    (i + 1) < strlen(line))
+                {
+                    is_section_name_present = 1;
+                    key = &line[i+1];
+                    section_end_index = i - 1;
+                    continue;
+                }
+
+                if (is_section_name_present &&
+                    is_equal_sign_present == 0 &&
+                    line[i] == '=' && (i+1) <= strlen(line))
+                {
+                    line[section_end_index] = '\0';
+                    line[i] = '\0';
+                    is_equal_sign_present = 1;
+                    value = &line[i+1];
+                    break;
+                }
+            }
+
+            if (is_equal_sign_present && is_section_name_present)
+            {
+                TRIM(section_name);
+                TRIM(key);
+                TRIM(value);
+
+                process_configuration_values(section_name, key, value, 0, 1);
+            }
+            
+            env_iter++;
+        }
     }
 }
 
@@ -490,68 +525,6 @@ static void process_configuration_values(
     else
     {
         config_set_value(section, key, value);
-    }
-}
-
-static void load_environment_variables(const char** environment_variables)
-{
-    // Required Format: Section Name__Key=Value
-    if (environment_variables != NULL)
-    {
-        int env_iter = 0;
-        char line[1000];
-
-        int is_equal_sign_present = 0;
-        int is_section_name_present = 0;
-        char *section_name, *key, *value;
-        int section_end_index = 0;
-
-        while (environment_variables[env_iter] != NULL)
-        {
-            strncpy(line, environment_variables[env_iter], sizeof(line) - 1);
-            TRIM(line);
-
-            is_equal_sign_present = 0;
-            is_section_name_present = 0;
-
-            section_name = &line[0];
-
-            for (int i = 0; i < strlen(line); i++)
-            {
-                if (i >= 2 &&
-                    is_section_name_present == 0 &&
-                    line[i] == '_' && line[i-1] == '_' &&
-                    (i + 1) < strlen(line))
-                {
-                    is_section_name_present = 1;
-                    key = &line[i+1];
-                    section_end_index = i - 1;
-                    continue;
-                }
-
-                if (is_section_name_present &&
-                    is_equal_sign_present == 0 &&
-                    line[i] == '=' && (i+1) <= strlen(line))
-                {
-                    line[section_end_index] = '\0';
-                    line[i] = '\0';
-                    is_equal_sign_present = 1;
-                    value = &line[i+1];
-                    break;
-                }
-            }
-
-            if (is_equal_sign_present && is_section_name_present)
-            {
-                TRIM(section_name);
-                TRIM(key);
-                TRIM(value);
-
-                process_configuration_values(section_name, key, value, 0, 1);
-            }
-            
-            env_iter++;
-        }
     }
 }
 
