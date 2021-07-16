@@ -9,37 +9,31 @@
 #include "Macros.h"
 #include "StringHelper.h"
 
-#define MAX_DIRECTORY_NAME_LENGTH                      300
-#define MAX_FILE_NAME_LENGTH                           300
-#define MAX_IP_ADDRESS_LENGTH                          100
-#define MAX_USER_NAME_LENGTH                           50
-#define MAX_USER_PASSWORD_LENGTH                       50
-
 #define GENERAL_VALUES_TOTAL_VALUES                    100*1000
 #define GENERAL_VALUES_SECTION_NAME_AND_KEY_LENGTH     150
-#define GENERAL_VALUES_VALUE_LENGTH                    150
+#define GENERAL_VALUES_VALUE_LENGTH                    300
 
 //------------------------------------------------------------------------------
 // Configuration Variables
 //------------------------------------------------------------------------------
 static char* default_config_files_path = "/etc/orchestra/";
 
-static char data_directory[MAX_DIRECTORY_NAME_LENGTH + 1];
-static char temp_data_directory[MAX_DIRECTORY_NAME_LENGTH + 1];
-static char log_directory[MAX_DIRECTORY_NAME_LENGTH + 1];
-static char scripts_directory[MAX_DIRECTORY_NAME_LENGTH + 1];
-static char user_data_directory[MAX_DIRECTORY_NAME_LENGTH + 1];
-static char app_data_directory[MAX_DIRECTORY_NAME_LENGTH + 1];
+static char* data_directory = "";
+static char* temp_data_directory = "";
+static char* log_directory = "";
+static char* scripts_directory = "";
+static char* user_data_directory = "";
+static char* app_data_directory = "";
 
-static char log_file[MAX_FILE_NAME_LENGTH + 1];
-static char user_data_file[MAX_FILE_NAME_LENGTH + 1];
-static char app_data_file[MAX_FILE_NAME_LENGTH + 1];
+static char* log_file = "";
+static char* user_data_file = "";
+static char* app_data_file = "";
 
-static char listening_address[MAX_IP_ADDRESS_LENGTH + 1];
+static char* listening_address = "127.0.0.1";
 static unsigned short listening_port = 15209;
 
-static char initial_user_name[MAX_USER_NAME_LENGTH + 1];
-static char initial_user_password[MAX_USER_PASSWORD_LENGTH + 1];
+static char* initial_user_name = "";
+static char* initial_user_password = "";
 
 static char general_values_keys[GENERAL_VALUES_TOTAL_VALUES][GENERAL_VALUES_SECTION_NAME_AND_KEY_LENGTH + 2];
 static char general_values_values[GENERAL_VALUES_TOTAL_VALUES][GENERAL_VALUES_VALUE_LENGTH + 1];
@@ -84,7 +78,7 @@ const char* config_get_value(const char* section, const char* key)
     return NULL;
 }
 
-static void config_set_value(const char* section, const char* key, const char* value)
+static unsigned int config_set_value(const char* section, const char* key, const char* value)
 {
     int is_already_existing = 0; unsigned int existing_at_index = 0;
 
@@ -107,6 +101,8 @@ static void config_set_value(const char* section, const char* key, const char* v
         strncpy(general_values_values[existing_at_index],
                 value,
                 sizeof(general_values_values[existing_at_index]) - 1);
+
+        return existing_at_index;
     }
     else
     {
@@ -123,6 +119,8 @@ static void config_set_value(const char* section, const char* key, const char* v
                 sizeof(general_values_values[general_values_next_index]) - 1);
         
         general_values_next_index++;
+
+        return (general_values_next_index - 1);
     }
 }
 
@@ -132,7 +130,6 @@ static void config_set_value(const char* section, const char* key, const char* v
 static void load_configuration_file(const char* file_name);
 static void load_environment_variables(const char** environment_variables);
 static void expand_encoded_configuration_values();
-static void print_loaded_values();
 
 void load_configuration(const char* config_files_path, const char** environment_variables)
 {
@@ -213,12 +210,9 @@ void load_configuration(const char* config_files_path, const char** environment_
 
     // Expanding the encoded values
     expand_encoded_configuration_values();
-    
-    // Debug
-    print_loaded_values();
 }
 
-static void process_configuration_values(const char* section, const char* key, const char* value, const int line_number, const int is_environment_variable);
+static void process_configuration_value(const char* section, const char* key, const char* value, const int line_number, const int is_environment_variable);
 
 static void load_configuration_file(const char* file_name)
 {
@@ -288,7 +282,7 @@ static void load_configuration_file(const char* file_name)
                     TRIM(name_ptr);
                     TRIM(value_ptr);
                     
-                    process_configuration_values(section_name, name_ptr, value_ptr, line_number, 0);
+                    process_configuration_value(section_name, name_ptr, value_ptr, line_number, 0);
                 }
                 else
                 {
@@ -366,7 +360,7 @@ static void load_environment_variables(const char** environment_variables)
                 TRIM(key);
                 TRIM(value);
 
-                process_configuration_values(section_name, key, value, 0, 1);
+                process_configuration_value(section_name, key, value, 0, 1);
             }
             
             env_iter++;
@@ -374,39 +368,42 @@ static void load_environment_variables(const char** environment_variables)
     }
 }
 
-static void process_configuration_values(
+static void process_configuration_value(
     const char* section, const char* key, const char* value,
     const int line_number, const int is_environment_variable)
 {
+    // Storing all the key->value pairs for general availability
+    unsigned int inserted_index = config_set_value(section, key, value);
+
     if (strcmp(section, "STANDARD_DIRECTORIES") == 0)
     {
         if (strcmp(key, "DataDirectory") == 0)
         {
-            strncpy(data_directory, value, sizeof(data_directory) - 1);
+            data_directory = general_values_values[inserted_index];
         }
         else if (strcmp(key, "TempDataDirectory") == 0)
         {
-            strncpy(temp_data_directory, value, sizeof(temp_data_directory) - 1);
+            temp_data_directory = general_values_values[inserted_index];
         }
         else if (strcmp(key, "LogDirectory") == 0)
         {
-            strncpy(log_directory, value, sizeof(log_directory) - 1);
+            log_directory = general_values_values[inserted_index];
         }
         else if (strcmp(key, "ScriptsDirectory") == 0)
         {
-            strncpy(scripts_directory, value, sizeof(scripts_directory) - 1);
+            scripts_directory = general_values_values[inserted_index];
         }
         else if (strcmp(key, "UserDataDirectory") == 0)
         {
-            strncpy(user_data_directory, value, sizeof(user_data_directory) - 1);
+            user_data_directory = general_values_values[inserted_index];
         }
         else if (strcmp(key, "AppDataDirectory") == 0)
         {
-            strncpy(app_data_directory, value, sizeof(app_data_directory) - 1);
+            app_data_directory = general_values_values[inserted_index];
         }
         else
         {
-            orc_console_print("Ignoring the unrecognized configuration value ");
+            orc_console_print("Ignoring the unrecognized standard configuration value ");
             orc_console_print(key);
             orc_console_print(" = ");
             orc_console_print(value);
@@ -429,19 +426,19 @@ static void process_configuration_values(
     {
         if (strcmp(key, "LogFile") == 0)
         {
-            strncpy(log_file, value, sizeof(log_file) - 1);
+            log_file = general_values_values[inserted_index];
         }
         else if (strcmp(key, "UserDataFile") == 0)
         {
-            strncpy(user_data_file, value, sizeof(user_data_file) - 1);
+            user_data_file = general_values_values[inserted_index];
         }
         else if (strcmp(key, "AppDataFile") == 0)
         {
-            strncpy(app_data_file, value, sizeof(app_data_file) - 1);
+            app_data_file = general_values_values[inserted_index];
         }
         else
         {
-            orc_console_print("Ignoring the unrecognized configuration value ");
+            orc_console_print("Ignoring the unrecognized standard configuration value ");
             orc_console_print(key);
             orc_console_print(" = ");
             orc_console_print(value);
@@ -464,7 +461,7 @@ static void process_configuration_values(
     {
         if (strcmp(key, "ListeningAddress") == 0)
         {
-            strncpy(listening_address, value, sizeof(listening_address) - 1);
+            listening_address = general_values_values[inserted_index];
         }
         else if (strcmp(key, "ListeningPort") == 0)
         {
@@ -472,7 +469,7 @@ static void process_configuration_values(
         }
         else
         {
-            orc_console_print("Ignoring the unrecognized configuration value ");
+            orc_console_print("Ignoring the unrecognized standard configuration value ");
             orc_console_print(key);
             orc_console_print(" = ");
             orc_console_print(value);
@@ -495,15 +492,15 @@ static void process_configuration_values(
     {
         if (strcmp(key, "UserName") == 0)
         {
-            strncpy(initial_user_name, value, sizeof(initial_user_name) - 1);
+            initial_user_name = general_values_values[inserted_index];
         }
         else if (strcmp(key, "Password") == 0)
         {
-            strncpy(initial_user_password, value, sizeof(initial_user_password) - 1);
+            initial_user_password = general_values_values[inserted_index];
         }
         else
         {
-            orc_console_print("Ignoring the unrecognized configuration value ");
+            orc_console_print("Ignoring the unrecognized standard configuration value ");
             orc_console_print(key);
             orc_console_print(" = ");
             orc_console_print(value);
@@ -522,47 +519,86 @@ static void process_configuration_values(
             orc_console_print_line("");
         }
     }
-    else
+}
+
+static void find_expansion_token(
+    int* dollar_sign_index,
+    int* start_bracket_index, int* collon_sign_index, int* end_bracket_index,
+    const char* value)
+{
+    *dollar_sign_index = -1;
+    *start_bracket_index = -1;
+    *collon_sign_index = -1;
+    *end_bracket_index = -1;
+
+    for (int i = 0; i < strlen(value); i++)
     {
-        config_set_value(section, key, value);
+        if (value[i] == '$') { *dollar_sign_index   = i; continue; }
+        if (value[i] == '(') { *start_bracket_index = i; continue; }
+        if (value[i] == ':') { *collon_sign_index   = i; continue; }
+        if (value[i] == ')') { *end_bracket_index   = i; continue; }
     }
 }
 
+// Replaces $(Section:Key) by its value in all configuration values
 static void expand_encoded_configuration_values()
 {
-    // TODO: to expand values like "LogFile = $(LogDirectory)/log-file.log"
-}
+    int dollar_sign_index,
+        start_bracket_index, collon_sign_index, end_bracket_index;
+    
+    char temp[GENERAL_VALUES_VALUE_LENGTH + 1];
 
-static void print_loaded_values()
-{
-    orc_console_print("DataDir: ");
-    orc_console_print_line(data_directory);
-    orc_console_print("TempDataDir: ");
-    orc_console_print_line(temp_data_directory);
-    orc_console_print("LogDataDir: ");
-    orc_console_print_line(log_directory);
-    orc_console_print("ScriptsDir: ");
-    orc_console_print_line(scripts_directory);
-    orc_console_print("UserDataDir: ");
-    orc_console_print_line(user_data_directory);
-    orc_console_print("AppDataDir: ");
-    orc_console_print_line(app_data_directory);
+    for (unsigned int i = 0; i < general_values_next_index; i++)
+    {
+        do
+        {
+            strncpy(temp, general_values_values[i], sizeof(temp) - 1);
 
-    orc_console_print("LogFile: ");
-    orc_console_print_line(log_file);
-    orc_console_print("UserDataFile: ");
-    orc_console_print_line(user_data_file);
-    orc_console_print("AppDataFile: ");
-    orc_console_print_line(app_data_file);
+            find_expansion_token(
+                &dollar_sign_index,
+                &start_bracket_index, &collon_sign_index, &end_bracket_index,
+                temp);
+            
+            if (dollar_sign_index >= 0 &&
+                dollar_sign_index < start_bracket_index &&
+                start_bracket_index < collon_sign_index &&
+                collon_sign_index < end_bracket_index)
+            {
+                char* section = &temp[start_bracket_index + 1];
+                char* key = &temp[collon_sign_index + 1];
 
-    orc_console_print("ListeningIP: ");
-    orc_console_print_line(listening_address);
-    orc_console_print("ListeningPort: ");
-    orc_console_print_int(listening_port);
-    orc_console_print_line("");
+                temp[collon_sign_index] = '\0';
+                temp[end_bracket_index] = '\0';
 
-    orc_console_print("InitUser: ");
-    orc_console_print_line(initial_user_name);
-    orc_console_print("InitPwd: ");
-    orc_console_print_line(initial_user_password);
+                const char* replacement = config_get_value(section, key);
+                if (replacement == NULL)
+                {
+                    orc_console_print("Cannot find: ");
+                    orc_console_print(section);
+                    orc_console_print(":");
+                    orc_console_print(key);
+                    orc_console_print(" for expanding ");
+                    orc_console_print_line(general_values_values[i]);
+
+                    break;
+                }
+                else
+                {
+                    string_replace_at(
+                        general_values_values[i],
+                        dollar_sign_index, end_bracket_index, replacement,
+                        sizeof(general_values_values[i]) - 1);
+                }
+            }
+            else
+            {
+                if (dollar_sign_index >= 0)
+                {
+                    // TODO: Specific error message to be printed (if applicable)
+                }
+
+                break;
+            }
+        } while (1);
+    }
 }

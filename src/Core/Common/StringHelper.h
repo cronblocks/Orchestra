@@ -7,7 +7,10 @@
 #define TRIM(x) RTRIM(x) LTRIM(x) TRIM_CHARS(x)
 
 // Find "match" in "target" and replace it with "replacement"
-void replace(char* target, const char* match, const char* replacement, unsigned int target_size);
+void string_replace(char* target, const char* match, const char* replacement, unsigned int target_size);
+
+// Replace from "start_index" to "end_index" in "target" with "replacement"
+void string_replace_at(char* target, int start_index, int end_index, const char* replacement, unsigned int target_size);
 
 // Return a non-zero value if the "target" ends with "ends"
 int string_ends_with(const char* target, const char* ends);
