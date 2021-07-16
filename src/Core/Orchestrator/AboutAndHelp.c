@@ -15,12 +15,15 @@ void print_about()
 {
     print_banner();
     orc_console_print_line("Orchestra is an open-source application intended to provide");
-    orc_console_print_line("an easy and lightweight interface to remote machines");
-    orc_console_print_line("in order to manage remote applications' execution. In a sense");
-    orc_console_print_line("it is to provide graphical and command-line interface to the");
-    orc_console_print_line("remote machines for easy management. The prime reason for its");
-    orc_console_print_line("existence is to handle remote Linux machines that do not have");
-    orc_console_print_line("graphical environments installed for various reasons.");
+    orc_console_print_line("an  easy  and  light-weight  interface  to  remote-machines");
+    orc_console_print_line("in order to manage remote-applications' execution.");
+    orc_console_print_line("");
+    orc_console_print_line("In a sense, to provide graphical and command-line interface");
+    orc_console_print_line("to headless remote-machines for ease of management, and  to");
+    orc_console_print_line("automate various tasks, make Orchestra's reason to exist.");
+    orc_console_print_line("");
+    orc_console_print_line("For more information, please see:");
+    orc_console_print_line("         https://github.com/easy-machines/orchestra");
     orc_console_print_line("");
 }
 
