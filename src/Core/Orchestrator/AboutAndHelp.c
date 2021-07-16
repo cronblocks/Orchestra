@@ -27,6 +27,9 @@ void print_about()
 void print_help()
 {
     print_banner();
-    orc_console_print_line("    --config-path config-files-path");
+    orc_console_print_line("Use:");
+    orc_console_print_line("  --about                           : To print information about the software");
+    orc_console_print_line("  --config-path <config-files-path> : To provide path containing *.conf files");
+    orc_console_print_line("  --help                            : To print this help information");
     orc_console_print_line("");
 }
