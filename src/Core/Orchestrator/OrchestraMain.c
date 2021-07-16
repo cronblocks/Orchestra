@@ -31,8 +31,6 @@ void parse_command_line_arguments(int argc, char** argv)
     int isPrintAbout = 0;
     int isPrintHelp = 0;
 
-    int isSetConfig = 0;
-
     for (int i=0; i<argc; i++)
     {
         char* argument = argv[i];
@@ -49,17 +47,16 @@ void parse_command_line_arguments(int argc, char** argv)
             break;
         }
 
-        if (strcmp(argument, "--config") == 0)
+        if (strcmp(argument, "--config-path") == 0)
         {
             if (i < argc-1)
             {
                 config_path = argv[++i];
-                isSetConfig = 1;
             }
         }
     }
 
-    // Exitting on doing the needful
+    // Exitting after showing the help
     if (isPrintAbout)
     {
         print_about();
@@ -70,9 +67,6 @@ void parse_command_line_arguments(int argc, char** argv)
         print_help();
         exit(0);
     }
-    
-    // Processing the command-line switches
-    //
 }
 
 void setup_execution_environment()

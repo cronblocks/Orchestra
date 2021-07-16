@@ -27,6 +27,6 @@ void print_about()
 void print_help()
 {
     print_banner();
-    orc_console_print_line("    --config config-files-folder");
+    orc_console_print_line("    --config-path config-files-path");
     orc_console_print_line("");
 }
