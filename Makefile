@@ -21,8 +21,8 @@ BUILD_ROOT_DIR   = $(PWD)/build
 APP_EXE_DIR      = $(PWD)
 CONFIG_FILES_DIR = $(SRC_ROOT_DIR)/Core/Common/ConfigurationFiles
 
-TARGET_EXE_DIR  = /usr/bin/
-TARGET_CONF_DIR = /etc/$(APP_EXE)
+INSTALL_EXE_DIR  = /usr/bin/
+INSTALL_CONF_DIR = /etc/$(APP_EXE)
 
 CORE_ROOT_DIR                         = Core
 CORE_COMMON_DIR                       = $(CORE_ROOT_DIR)/Common
@@ -55,11 +55,11 @@ $(foreach dir, $(APP_SRCS_DIRS), $(shell [ -d $(BUILD_ROOT_DIR)/$(dir) ] || mkdi
 #######################################
 # Defining Object Files
 #######################################
-SRCS_C   := $(foreach dir, $(APP_SRCS_DIRS), $(shell ls $(SRC_ROOT_DIR)/$(dir)/*.c 2>/dev/null | sed "s|.*/|$(SRC_ROOT_DIR)/$(dir)/|g"))
+SRCS_C   := $(foreach dir, $(APP_SRCS_DIRS), $(shell ls $(SRC_ROOT_DIR)/$(dir)/*.c   2>/dev/null | sed "s|.*/|$(SRC_ROOT_DIR)/$(dir)/|g"))
 SRCS_CPP := $(foreach dir, $(APP_SRCS_DIRS), $(shell ls $(SRC_ROOT_DIR)/$(dir)/*.cpp 2>/dev/null | sed "s|.*/|$(SRC_ROOT_DIR)/$(dir)/|g"))
 
-OBJS_C   := $(foreach file, $(SRCS_C:c=o), $(shell echo $(file) | sed "s|$(SRC_ROOT_DIR)/|$(BUILD_ROOT_DIR)/|g"))
-OBJS_CPP := $(foreach file, $(SRCS_CPP:cpp=o), $(shell echo $(file) | sed "s|$(SRC_ROOT_DIR)/|$(BUILD_ROOT_DIR)/|g"))
+OBJS_C   := $(foreach file, $(SRCS_C:c=o),     $(shell echo $(file) | sed "s|$(SRC_ROOT_DIR)/|$(BUILD_ROOT_DIR)/|g"))
+OBJS_CPP := $(foreach file, $(SRCS_CPP:cpp=O), $(shell echo $(file) | sed "s|$(SRC_ROOT_DIR)/|$(BUILD_ROOT_DIR)/|g"))
 
 APP_OBJECTS := $(OBJS_C) $(OBJS_CPP)
 
@@ -73,80 +73,86 @@ APP_CPP_FLAGS        = -Wall -std=c++11 $(INCLUDE_DIRS) -lpthread
 APP_LINKING_FLAGS    = -Wall -std=c++11 $(INCLUDE_DIRS) -lpthread
 
 #######################################
-# Rules for ".c"
+# Rules for ".c" and ".cpp"
 #######################################
+# SourceRoot/
 $(BUILD_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
+$(BUILD_ROOT_DIR)/%.O: $(SRC_ROOT_DIR)/%.cpp
+	@echo [Compiling] $<
+	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
+
+# SourceRoot/CoreRoot/
 $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
+$(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.cpp
+	@echo [Compiling] $<
+	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
+
+# SourceRoot/CoreRoot/Common/
 $(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
+$(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.cpp
+	@echo [Compiling] $<
+	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
+
+# SourceRoot/CoreRoot/Connectivity/
 $(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
+$(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.cpp
+	@echo [Compiling] $<
+	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
+
+# SourceRoot/CoreRoot/Crypto/
 $(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
+$(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.cpp
+	@echo [Compiling] $<
+	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
+
+# SourceRoot/CoreRoot/ExecutionModulesManagement/
 $(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
+$(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.cpp
+	@echo [Compiling] $<
+	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
+
+# SourceRoot/CoreRoot/Orchestrator/
 $(BUILD_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
+$(BUILD_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.cpp
+	@echo [Compiling] $<
+	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
+
+# SourceRoot/ModulesRoot/
 $(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
+$(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.O: $(SRC_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.cpp
+	@echo [Compiling] $<
+	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
+
+# SourceRoot/ModulesRoot/Linux/
 $(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.o: $(SRC_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
 
-#######################################
-# Rules for ".cpp"
-#######################################
-$(BUILD_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/%.cpp
-	@echo [Compiling] $<
-	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
-
-$(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.cpp
-	@echo [Compiling] $<
-	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
-
-$(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.cpp
-	@echo [Compiling] $<
-	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
-
-$(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.cpp
-	@echo [Compiling] $<
-	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
-
-$(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.cpp
-	@echo [Compiling] $<
-	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
-
-$(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.cpp
-	@echo [Compiling] $<
-	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
-
-$(BUILD_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.cpp
-	@echo [Compiling] $<
-	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
-
-$(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.cpp
-	@echo [Compiling] $<
-	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
-
-$(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.o: $(SRC_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.cpp
+$(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.O: $(SRC_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
@@ -178,14 +184,14 @@ install:
 	@echo "Installing Executables ..."
 	@if [ -f $(APP_EXE_DIR)/$(APP_EXE) ];                       \
 	then                                                        \
-		sudo cp -f $(APP_EXE_DIR)/$(APP_EXE) $(TARGET_EXE_DIR); \
+		sudo cp -f $(APP_EXE_DIR)/$(APP_EXE) $(INSTALL_EXE_DIR); \
 	else                                                        \
 		echo "Please build the project first";                  \
 	fi
 
 	@echo "Copying Configuration Files ..."
-	$(shell [ -d $(TARGET_CONF_DIR) ] || sudo mkdir $(TARGET_CONF_DIR))
-	@sudo cp -f $(CONFIG_FILES_DIR)/*.conf $(TARGET_CONF_DIR)
+	$(shell [ -d $(INSTALL_CONF_DIR) ] || sudo mkdir $(INSTALL_CONF_DIR))
+	@sudo cp -f $(CONFIG_FILES_DIR)/*.conf $(INSTALL_CONF_DIR)
 
 	@echo "Completed"
 
@@ -194,10 +200,10 @@ uninstall:
 	@echo ""
 
 	@echo "Removing Executables ..."
-	@sudo rm -f $(TARGET_EXE_DIR)/$(APP_EXE);
+	@sudo rm -f $(INSTALL_EXE_DIR)/$(APP_EXE);
 
 	@echo "Removing Configuration Files ..."
-	@sudo rm -rf $(TARGET_CONF_DIR)
+	@sudo rm -rf $(INSTALL_CONF_DIR)
 
 	@echo "Completed"
 
