@@ -20,7 +20,7 @@ int main(int argc, char** argv, char** env)
         parse_command_line_arguments(argc, argv);
     }
     
-    load_configuration(config_path, env);
+    load_configuration(config_path, (const char**)env);
 
     setup_execution_environment();
     execute();
