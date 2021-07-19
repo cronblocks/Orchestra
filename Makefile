@@ -84,7 +84,7 @@ $(BUILD_ROOT_DIR)/%.O: $(SRC_ROOT_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/CoreRoot/
+# SourceRoot/Core/
 $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -93,7 +93,7 @@ $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/CoreRoot/Common/
+# SourceRoot/Core/Common/
 $(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -102,7 +102,7 @@ $(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/CoreRoot/Connectivity/
+# SourceRoot/Core/Connectivity/
 $(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -111,7 +111,7 @@ $(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_CONNECTIV
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/CoreRoot/Crypto/
+# SourceRoot/Core/Crypto/
 $(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -120,7 +120,7 @@ $(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/CoreRoot/ExecutionModulesManagement/
+# SourceRoot/Core/ExecutionModulesManagement/
 $(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -129,7 +129,7 @@ $(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.O: $(SRC_ROOT_DIR)/
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/CoreRoot/Orchestrator/
+# SourceRoot/Core/Orchestrator/
 $(BUILD_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -138,7 +138,7 @@ $(BUILD_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_ORCHESTRA
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/ModulesRoot/
+# SourceRoot/ExecutionModules/
 $(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -147,7 +147,7 @@ $(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_ROOT_DIR)/%.O: $(SRC_ROOT_DIR)/$(EXECUTION
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/ModulesRoot/Linux/
+# SourceRoot/ExecutionModules/Linux/
 $(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.o: $(SRC_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
