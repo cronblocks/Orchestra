@@ -2,7 +2,7 @@
 *Orchestra* is intended to provide an easy and lightweight interface to remote machines in order to manage remote applications' execution. In a sense it is to provide graphical and command-line interface to the remote machines for easy management. The prime reason for its existence is to handle remote Linux machines that do not have graphical environments installed for various reasons.
 
 # User Interface
-The user-interface for this project is kept in a separate repository https://github.com/cronblocks/orchestra-ui
+The user-interface for this project is kept in a separate [repository](https://github.com/cronblocks/Orchestra-UI).
 
 # Linux Machine
 Presently the project is targeting for controlling remote Linux machines from the ease of Graphical User Interface on Windows machines.
