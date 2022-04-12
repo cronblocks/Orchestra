@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "StringHelper.h"
+#include "string_helper.h"
 
 // Find "match" in "target" and replace it with "replacement"
 void string_replace(char* target, const char* match, const char* replacement, unsigned int target_size)

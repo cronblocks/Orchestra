@@ -4,10 +4,11 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#include "ConfigurationProvider.h"
-#include "OrcPrint.h"
-#include "Macros.h"
-#include "StringHelper.h"
+#include "configuration_provider.h"
+
+#include "orc_print.h"
+#include "macros.h"
+#include "string_helper.h"
 
 #define GENERAL_VALUES_TOTAL_VALUES                    100*1000
 #define GENERAL_VALUES_SECTION_NAME_AND_KEY_LENGTH     150

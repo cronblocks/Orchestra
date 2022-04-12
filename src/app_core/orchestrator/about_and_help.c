@@ -1,6 +1,6 @@
-#include "AppInfo.h"
-#include "Helpers.h"
-#include "OrcPrint.h"
+#include "app_info.h"
+#include "helpers.h"
+#include "orc_print.h"
 
 static void print_banner()
 {
