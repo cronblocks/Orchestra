@@ -1,6 +1,9 @@
 # Ignoring the build files
 *.o
+*.O
+
 orchestra
+!/src/**/orchestra
 
 # Ignoring the build directory
 build/
