@@ -84,7 +84,7 @@ $(BUILD_ROOT_DIR)/%.O: $(SRC_ROOT_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/Core/
+# SourceRoot/AppCore/
 $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -93,7 +93,7 @@ $(BUILD_ROOT_DIR)/$(CORE_ROOT_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_ROOT_DIR)/%.cpp
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/Core/Common/
+# SourceRoot/AppCore/Common/
 $(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -102,7 +102,7 @@ $(BUILD_ROOT_DIR)/$(CORE_COMMON_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_COMMON_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/Core/Connectivity/
+# SourceRoot/AppCore/Connectivity/
 $(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -111,7 +111,7 @@ $(BUILD_ROOT_DIR)/$(CORE_CONNECTIVITY_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_CONNECTIV
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/Core/Crypto/
+# SourceRoot/AppCore/Crypto/
 $(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -120,7 +120,7 @@ $(BUILD_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.O: $(SRC_ROOT_DIR)/$(CORE_CRYPTO_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/Core/ExecutionModulesManagement/
+# SourceRoot/AppCore/ExecutionModulesManagement/
 $(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -129,7 +129,7 @@ $(BUILD_ROOT_DIR)/$(CORE_EXECUTION_MODULES_MANAGEMENT_DIR)/%.O: $(SRC_ROOT_DIR)/
 	@echo [Compiling] $<
 	@$(GXX) -c $(APP_CPP_FLAGS) $< -o $@
 
-# SourceRoot/Core/Orchestrator/
+# SourceRoot/AppCore/Orchestrator/
 $(BUILD_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.o: $(SRC_ROOT_DIR)/$(CORE_ORCHESTRATOR_DIR)/%.c
 	@echo [Compiling] $<
 	@$(GCC) -c $(APP_C_FLAGS) $< -o $@
@@ -161,10 +161,10 @@ $(BUILD_ROOT_DIR)/$(EXECUTION_MODULES_LINUX_DIR)/%.O: $(SRC_ROOT_DIR)/$(EXECUTIO
 ################################################################################
 application: $(APP_OBJECTS)
 	@$(LDGCC) -o $(APP_EXE_DIR)/$(APP_EXE) $(APP_OBJECTS) $(APP_LINKING_FLAGS)
-	@echo "*****************************************************************"
-	@echo "*** Build Complete"
-	@echo "*****************************************************************"
-	@echo "**********************************************************"
+	@echo "****************************************"
+	@echo "** Build Complete"
+	@echo "********************************"
+	@echo "*************************"
 
 ################################################################################
 #    Cleaning Solution                                                         #
