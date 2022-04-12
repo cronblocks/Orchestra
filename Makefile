@@ -24,7 +24,7 @@ CONFIG_FILES_DIR = $(SRC_ROOT_DIR)/ConfigurationFiles
 INSTALL_EXE_DIR  = /usr/bin/
 INSTALL_CONF_DIR = /etc/$(APP_EXE)
 
-CORE_ROOT_DIR                         = Core
+CORE_ROOT_DIR                         = AppCore
 CORE_COMMON_DIR                       = $(CORE_ROOT_DIR)/Common
 CORE_CONNECTIVITY_DIR                 = $(CORE_ROOT_DIR)/Connectivity
 CORE_CRYPTO_DIR                       = $(CORE_ROOT_DIR)/Crypto
