@@ -19,7 +19,7 @@ APP_EXE          = orchestra
 SRC_ROOT_DIR     = $(PWD)/src
 BUILD_ROOT_DIR   = $(PWD)/build
 APP_EXE_DIR      = $(PWD)
-CONFIG_FILES_DIR = $(SRC_ROOT_DIR)/Core/Common/ConfigurationFiles
+CONFIG_FILES_DIR = $(SRC_ROOT_DIR)/ConfigurationFiles
 
 INSTALL_EXE_DIR  = /usr/bin/
 INSTALL_CONF_DIR = /etc/$(APP_EXE)
