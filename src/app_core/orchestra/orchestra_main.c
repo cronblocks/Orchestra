@@ -12,7 +12,7 @@ static void parse_command_line_arguments(int argc, char** argv);
 static void setup_execution_environment();
 static void execute();
 
-static char* config_path = "/etc/orchestra";
+static char* config_path = NULL;
 
 int main(int argc, char** argv, char** env) {
     set_defaults();
